@@ -14,27 +14,32 @@ CREATE SCHEMA IF NOT EXISTS account;
 -- 2) CUSTOMER SERVICE TABLES
 -- =========================
 -- Single Table Inheritance:
--- "Persona" + "Cliente" stored in a single table.
 
-CREATE TABLE IF NOT EXISTS customer.customers (
-    id              BIGSERIAL PRIMARY KEY,
-    customer_id     VARCHAR(50) NOT NULL UNIQUE,
-    password        VARCHAR(200) NOT NULL,
-    status          BOOLEAN NOT NULL DEFAULT TRUE,
-
--- Persona fields
+-- Persona table
+CREATE TABLE IF NOT EXISTS customer.persons (
+    person_id       BIGSERIAL PRIMARY KEY,
     name            VARCHAR(120) NOT NULL,
     gender          VARCHAR(20),
     age             INTEGER,
     identification  VARCHAR(50),
     address         VARCHAR(200),
-    phone           VARCHAR(40),
-    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    phone           VARCHAR(40)
 );
 
-CREATE INDEX IF NOT EXISTS idx_customers_identification
-    ON customer.customers(identification);
+CREATE INDEX IF NOT EXISTS idx_persons_identification
+    ON customer.persons(identification);
+
+CREATE TABLE IF NOT EXISTS customer.customers (
+    person_id     BIGINT PRIMARY KEY,
+    customer_id   VARCHAR(50) NOT NULL UNIQUE,
+    password      VARCHAR(200) NOT NULL,
+    status        BOOLEAN NOT NULL DEFAULT TRUE,
+
+    CONSTRAINT fk_customers_person
+        FOREIGN KEY (person_id)
+        REFERENCES customer.persons(person_id)
+        ON DELETE CASCADE
+);
 
 -- =========================
 -- 3) ACCOUNT SERVICE TABLES
