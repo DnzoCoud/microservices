@@ -50,6 +50,17 @@ public class Customer extends Person{
         this.active = active;
     }
 
+    public Customer updatePersona(String name, String gender, Integer age, String identification, String address, String phone) {
+        return this.toBuilder()
+                .name(name)
+                .gender(gender)
+                .age(age)
+                .identification(identification)
+                .address(address)
+                .phone(phone)
+                .build();
+    }
+
     public Customer changePasswordHash(String newPasswordHash) {
         return this.toBuilder()
                 .passwordHash(newPasswordHash)

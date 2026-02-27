@@ -1,18 +1,19 @@
 package com.microservices.customerService.infrastructure.web.controller;
 
 import com.microservices.customerService.application.dto.CreateCustomerCommand;
+import com.microservices.customerService.application.dto.UpdateCustomerCommand;
 import com.microservices.customerService.application.usecase.CreateCustomerUseCase;
 import com.microservices.customerService.application.usecase.ListCustomersUseCase;
-import com.microservices.customerService.domain.model.Customer;
+import com.microservices.customerService.application.usecase.UpdateCustomerUseCase;
 import com.microservices.customerService.infrastructure.web.advice.ApiResponse;
 import com.microservices.customerService.infrastructure.web.dto.CreateCustomerRequest;
+import com.microservices.customerService.infrastructure.web.dto.UpdateCustomerRequest;
 import com.microservices.customerService.infrastructure.web.mapper.CustomerWebMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @Tag(name = "Customers", description = "Customer endpoints")
@@ -22,11 +23,18 @@ public class CustomerController {
     private final ListCustomersUseCase listCustomers;
     private final CreateCustomerUseCase createCustomer;
     private final CustomerWebMapper mapper;
+    private final UpdateCustomerUseCase updateCustomer;
 
-    public CustomerController(ListCustomersUseCase listCustomers, CustomerWebMapper mapper, CreateCustomerUseCase createCustomer) {
+    public CustomerController(
+            ListCustomersUseCase listCustomers,
+            CustomerWebMapper mapper,
+            CreateCustomerUseCase createCustomer,
+            UpdateCustomerUseCase updateCustomer
+    ) {
         this.listCustomers = listCustomers;
         this.mapper = mapper;
         this.createCustomer = createCustomer;
+        this.updateCustomer = updateCustomer;
     }
 
     @GetMapping
@@ -51,6 +59,30 @@ public class CustomerController {
 
         var saved = createCustomer.execute(cmd);
         var response = mapper.toResponse(saved);
+        return ApiResponse.ok(response, req.getRequestURI());
+    }
+
+    @PutMapping("/{customerId}")
+    public ApiResponse<?> update(
+            @PathVariable String customerId,
+            @Valid @RequestBody UpdateCustomerRequest body,
+            HttpServletRequest req
+    ) {
+        var cmd = new UpdateCustomerCommand(
+                customerId,
+                body.getName(),
+                body.getGender(),
+                body.getAge(),
+                body.getIdentification(),
+                body.getAddress(),
+                body.getPhone(),
+                body.getPassword(),
+                body.getActive()
+        );
+
+        var saved = this.updateCustomer.execute(cmd);
+        var response = mapper.toResponse(saved);
+
         return ApiResponse.ok(response, req.getRequestURI());
     }
 }
