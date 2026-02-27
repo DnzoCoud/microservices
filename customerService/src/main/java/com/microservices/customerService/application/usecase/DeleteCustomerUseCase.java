@@ -1,6 +1,5 @@
 package com.microservices.customerService.application.usecase;
 
-import com.microservices.customerService.domain.exception.CustomerAlreadyExistsException;
 import com.microservices.customerService.domain.exception.CustomerNotFoundException;
 import com.microservices.customerService.domain.model.CustomerId;
 import com.microservices.customerService.domain.port.CustomerRepositoryPort;
