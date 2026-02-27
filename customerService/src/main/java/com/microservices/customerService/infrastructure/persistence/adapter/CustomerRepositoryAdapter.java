@@ -3,11 +3,8 @@ package com.microservices.customerService.infrastructure.persistence.adapter;
 import com.microservices.customerService.domain.model.Customer;
 import com.microservices.customerService.domain.model.CustomerId;
 import com.microservices.customerService.domain.port.CustomerRepositoryPort;
-import com.microservices.customerService.infrastructure.persistence.entity.CustomerEntity;
 import com.microservices.customerService.infrastructure.persistence.mapper.CustomerPersistenceMapper;
 import com.microservices.customerService.infrastructure.persistence.repository.CustomerJpaRepository;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
