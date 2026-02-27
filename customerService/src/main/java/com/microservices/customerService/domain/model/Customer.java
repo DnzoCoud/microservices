@@ -4,14 +4,15 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 /**
  * Domain model representing Persona + Cliente.
  * Framework-agnostic: no Spring/JPA annotations.
  */
 @Getter
-@Builder(toBuilder = true)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@SuperBuilder(toBuilder = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @ToString(exclude = "passwordHash")
 public class Customer extends Person{
     @EqualsAndHashCode.Include
