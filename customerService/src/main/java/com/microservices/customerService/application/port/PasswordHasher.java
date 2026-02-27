@@ -1,4 +1,8 @@
 package com.microservices.customerService.application.port;
 
-public class PasswordHasher {
+/**
+ * Abstraction for hashing raw passwords.
+ */
+public interface PasswordHasher {
+    String hash(String password);
 }
