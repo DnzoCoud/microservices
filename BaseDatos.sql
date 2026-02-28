@@ -88,3 +88,90 @@ CREATE TABLE IF NOT EXISTS account.movements (
 
 CREATE INDEX IF NOT EXISTS idx_movements_account_id_date
     ON account.movements(account_id, movement_date);
+
+-- Update timestamp helper
+CREATE OR REPLACE FUNCTION account.set_updated_at()
+RETURNS TRIGGER AS $$
+    BEGIN
+      NEW.updated_at = NOW();
+    RETURN NEW;
+    END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_accounts_updated_at ON account.accounts;
+CREATE TRIGGER trg_accounts_updated_at
+BEFORE UPDATE ON account.accounts
+FOR EACH ROW
+EXECUTE FUNCTION account.set_updated_at();
+
+-- =========================
+-- 4) DB-Owned Business Logic (Stored Procedure)
+-- =========================
+-- Atomic movement registration:
+-- - Locks the account row to avoid concurrent race conditions
+-- - Validates balance for DEBIT
+-- - Inserts movement
+-- - Updates account balance
+-- Required error message: "Saldo no disponible"
+
+CREATE OR REPLACE FUNCTION account.create_movement(
+  p_account_id BIGINT,
+  p_movement_type VARCHAR,
+  p_amount NUMERIC,
+  p_movement_date TIMESTAMPTZ DEFAULT NOW()
+)
+RETURNS TABLE (
+  movement_id BIGINT,
+  new_balance NUMERIC
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+v_balance NUMERIC(18,2);
+  v_status  BOOLEAN;
+  v_new_balance NUMERIC(18,2);
+BEGIN
+  IF p_amount IS NULL OR p_amount <= 0 THEN
+    RAISE EXCEPTION 'Invalid amount';
+END IF;
+
+  IF p_movement_type NOT IN ('CREDIT', 'DEBIT') THEN
+    RAISE EXCEPTION 'Invalid movement type';
+END IF;
+
+  -- Lock the account row to prevent race conditions
+    SELECT a.balance, a.status
+    INTO v_balance, v_status
+    FROM account.accounts a
+    WHERE a.id = p_account_id
+        FOR UPDATE;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Account not found';
+    END IF;
+
+      IF v_status IS FALSE THEN
+        RAISE EXCEPTION 'Account inactive';
+    END IF;
+
+      IF p_movement_type = 'DEBIT' THEN
+        IF v_balance < p_amount THEN
+          RAISE EXCEPTION 'Insufficient balance';
+    END IF;
+        v_new_balance := v_balance - p_amount;
+    ELSE
+        v_new_balance := v_balance + p_amount;
+    END IF;
+
+    INSERT INTO account.movements(account_id, movement_date, movement_type, amount, balance_after)
+    VALUES (p_account_id, COALESCE(p_movement_date, NOW()), p_movement_type, p_amount, v_new_balance)
+        RETURNING id INTO movement_id;
+
+    UPDATE account.accounts
+    SET balance = v_new_balance
+    WHERE id = p_account_id;
+
+    new_balance := v_new_balance;
+      RETURN NEXT;
+    END;
+$$;
