@@ -29,7 +29,7 @@ public class AccountPersistenceMapper {
         return AccountEntity.builder()
                 .id(d.getId() != null ? d.getId().getValue() : null)
                 .accountNumber(d.getAccountNumber().getValue())
-                .accountType(d.getAccountType().name())
+                .accountType(d.getAccountType().getAccountType())
                 .initialBalance(d.getInitialBalance())
                 .balance(d.getBalance())
                 .status(d.isActive())

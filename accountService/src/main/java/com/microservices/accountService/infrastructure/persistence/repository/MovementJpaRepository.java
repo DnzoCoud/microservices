@@ -7,5 +7,5 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 public interface MovementJpaRepository extends JpaRepository<MovementEntity, Long> {
-    List<MovementEntity> findByAccount_IdAndMovementDateBetween(Long accountId, OffsetDateTime from, OffsetDateTime to);
+    List<MovementEntity> findByAccount_IdAndMovementDateBetweenOrderByMovementDateAsc(Long accountId, OffsetDateTime from, OffsetDateTime to);
 }

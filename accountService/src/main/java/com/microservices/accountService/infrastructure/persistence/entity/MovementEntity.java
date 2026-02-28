@@ -26,7 +26,7 @@ public class MovementEntity {
     private OffsetDateTime movementDate;
 
     @Column(name = "movement_type", nullable = false, length = 10)
-    private String movementType; // CREDIT/DEBIT
+    private String movementType;
 
     @Column(name = "amount", nullable = false, precision = 18, scale = 2)
     private BigDecimal amount;

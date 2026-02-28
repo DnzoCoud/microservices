@@ -12,11 +12,11 @@ public class Movement {
     private final Long id;
     private final AccountId accountId;
     private final Instant date;
-    private final MovementType type;
+    private final AccountType type;
     private final BigDecimal amount;
     private final BigDecimal balanceAfter;
 
-    private Movement(Long id, AccountId accountId, Instant date, MovementType type, BigDecimal amount, BigDecimal balanceAfter) {
+    private Movement(Long id, AccountId accountId, Instant date, AccountType type, BigDecimal amount, BigDecimal balanceAfter) {
         if (accountId == null) throw new IllegalArgumentException("accountId must not be null");
         if (type == null) throw new IllegalArgumentException("type must not be null");
         if (amount == null || amount.signum() <= 0) throw new IllegalArgumentException("amount must be > 0");

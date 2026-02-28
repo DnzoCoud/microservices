@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS account.movements (
     balance_after  NUMERIC(18,2) NOT NULL,
     created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
-    CONSTRAINT chk_movement_type CHECK (movement_type IN ('CREDIT', 'DEBIT')),
+    CONSTRAINT chk_movement_type CHECK (movement_type IN ('Ahorros', 'Corriente')),
     CONSTRAINT chk_amount_positive CHECK (amount > 0)
     );
 
@@ -112,7 +112,7 @@ EXECUTE FUNCTION account.set_updated_at();
 -- - Validates balance for DEBIT
 -- - Inserts movement
 -- - Updates account balance
--- Required error message: "Saldo no disponible"
+-- Required error message: "Insufficient balance"
 
 CREATE OR REPLACE FUNCTION account.create_movement(
   p_account_id BIGINT,
@@ -135,7 +135,7 @@ BEGIN
     RAISE EXCEPTION 'Invalid amount';
 END IF;
 
-  IF p_movement_type NOT IN ('CREDIT', 'DEBIT') THEN
+  IF p_movement_type NOT IN ('Ahorros', 'Credito') THEN
     RAISE EXCEPTION 'Invalid movement type';
 END IF;
 

@@ -10,7 +10,7 @@ public class AccountWebMapper {
         return AccountResponse.builder()
             .id(a.getId().getValue() != null ? a.getId().getValue() : null)
             .accountNumber(a.getAccountNumber().getValue())
-            .accountType(a.getAccountType().name())
+            .accountType(a.getAccountType().getAccountType())
             .initialBalance(a.getInitialBalance())
             .balance(a.getBalance())
             .active(a.isActive())
