@@ -1,4 +1,4 @@
-package com.microservices.accountService.infrastructure.advice;
+package com.microservices.accountService.infrastructure.web.advice;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

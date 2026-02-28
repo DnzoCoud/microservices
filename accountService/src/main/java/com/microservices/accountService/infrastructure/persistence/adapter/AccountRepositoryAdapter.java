@@ -6,6 +6,7 @@ import com.microservices.accountService.infrastructure.persistence.mapper.Accoun
 import com.microservices.accountService.infrastructure.persistence.repository.AccountJpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -32,5 +33,20 @@ public class AccountRepositoryAdapter implements AccountRepositoryPort {
     @Override
     public Account save(Account account) {
         return mapper.toDomain(repo.save(mapper.toEntity(account)));
+    }
+
+    @Override
+    public List<Account> findByCustomerId(String customerId) {
+        return repo.findByCustomerId(customerId).stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public List<Account> findAll() {
+        return repo.findAll().stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public void deleteByAccountNumber(String accountNumber) {
+        repo.deleteByAccountNumber(accountNumber);
     }
 }

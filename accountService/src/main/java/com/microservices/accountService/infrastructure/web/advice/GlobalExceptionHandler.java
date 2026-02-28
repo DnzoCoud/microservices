@@ -1,4 +1,4 @@
-package com.microservices.accountService.infrastructure.advice;
+package com.microservices.accountService.infrastructure.web.advice;
 
 import com.microservices.accountService.domain.exception.CustomerInactiveException;
 import com.microservices.accountService.domain.exception.CustomerSnapshotNotFoundException;
