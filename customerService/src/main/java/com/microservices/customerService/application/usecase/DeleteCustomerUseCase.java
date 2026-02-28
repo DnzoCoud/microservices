@@ -19,10 +19,11 @@ public class DeleteCustomerUseCase {
     public void execute(String customerId) {
         CustomerId validationId = CustomerId.of(customerId);
 
-        if (!repository.existsByCustomerId(validationId)) {
-            throw new CustomerNotFoundException(validationId);
-        }
-        repository.deleteByCustomerId(validationId);
+        var current = repository.findByCustomerId(validationId)
+                .orElseThrow(() -> new CustomerNotFoundException(validationId));
+
+        current.changeStatus(false);
+        repository.save(current);
         publisher.publishDeleted(validationId);
     }
 }

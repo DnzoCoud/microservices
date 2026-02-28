@@ -18,10 +18,9 @@ public class DeleteAccountUseCase {
     public void execute(String accountNumber) {
         AccountNumber accountNumberObj =  AccountNumber.of(accountNumber);
 
-        if (!repo.existsByAccountNumber(accountNumberObj.getValue())) {
-            throw new AccountNotFoundException(accountNumber);
-        }
+        var current = repo.findByAccountNumber(accountNumberObj.getValue())
+            .orElseThrow(() -> new AccountNotFoundException(accountNumber));
 
-        repo.deleteByAccountNumber(accountNumberObj.getValue());
+        repo.save(current.changeStatus(false));
     }
 }

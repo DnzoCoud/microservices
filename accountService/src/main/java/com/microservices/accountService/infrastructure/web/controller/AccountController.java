@@ -2,10 +2,7 @@ package com.microservices.accountService.infrastructure.web.controller;
 
 import com.microservices.accountService.application.dto.CreateAccountCommand;
 import com.microservices.accountService.application.dto.UpdateAccountCommand;
-import com.microservices.accountService.application.usecase.CreateAccountUseCase;
-import com.microservices.accountService.application.usecase.DeleteAccountUseCase;
-import com.microservices.accountService.application.usecase.ListAccountUseCase;
-import com.microservices.accountService.application.usecase.UpdateAccountUseCase;
+import com.microservices.accountService.application.usecase.*;
 import com.microservices.accountService.domain.model.Account;
 import com.microservices.accountService.infrastructure.web.advice.ApiResponse;
 import com.microservices.accountService.infrastructure.web.dto.AccountResponse;
@@ -28,19 +25,28 @@ public class AccountController {
     private final CreateAccountUseCase createAccountUseCase;
     private final UpdateAccountUseCase updateAccountUseCase;
     private final DeleteAccountUseCase deleteAccountUseCase;
+    private final GetAccountUseCase getAccountUseCase;
 
     public AccountController(
         ListAccountUseCase listAccountUseCase,
         AccountWebMapper mapper,
         CreateAccountUseCase createAccountUseCase,
         UpdateAccountUseCase updateAccountUseCase,
-        DeleteAccountUseCase deleteAccountUseCase
+        DeleteAccountUseCase deleteAccountUseCase,
+        GetAccountUseCase getAccountUseCase
     ) {
         this.listAccountUseCase = listAccountUseCase;
         this.mapper = mapper;
         this.createAccountUseCase = createAccountUseCase;
         this.updateAccountUseCase = updateAccountUseCase;
         this.deleteAccountUseCase = deleteAccountUseCase;
+        this.getAccountUseCase = getAccountUseCase;
+    }
+
+    @GetMapping("/{accountNumber}")
+    public ApiResponse<AccountResponse> get(@PathVariable String accountNumber, HttpServletRequest req) {
+        var account = mapper.toResponse(getAccountUseCase.execute(accountNumber));
+        return ApiResponse.ok(account, req.getRequestURI());
     }
 
     @GetMapping

@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AccountJpaRepository extends JpaRepository<AccountEntity, Long> {
-    Optional<AccountEntity> findByAccountNumber(String accountNumber);
+    Optional<AccountEntity> findByAccountNumberAndStatusTrue(String accountNumber);
     boolean existsByAccountNumber(String accountNumber);
-    List<AccountEntity> findByCustomerId(String customerId);
+    List<AccountEntity> findByCustomerIdAndStatusTrue(String customerId);
     void deleteByAccountNumber(String accountNumber);
 }

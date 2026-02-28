@@ -22,7 +22,7 @@ public class CustomerSnapshotRepositoryAdapter implements CustomerSnapshotReposi
 
     @Override
     public Optional<CustomerSnapshot> findByCustomerId(String customerId) {
-        return jpa.findByCustomerId(customerId).map(mapper::toDomain);
+        return jpa.findByCustomerIdAndStatusTrue(customerId).map(mapper::toDomain);
     }
 
     @Override

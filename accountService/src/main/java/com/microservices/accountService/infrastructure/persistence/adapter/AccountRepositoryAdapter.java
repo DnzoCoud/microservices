@@ -22,7 +22,7 @@ public class AccountRepositoryAdapter implements AccountRepositoryPort {
 
     @Override
     public Optional<Account> findByAccountNumber(String accountNumber) {
-        return repo.findByAccountNumber(accountNumber).map(mapper::toDomain);
+        return repo.findByAccountNumberAndStatusTrue(accountNumber).map(mapper::toDomain);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class AccountRepositoryAdapter implements AccountRepositoryPort {
 
     @Override
     public List<Account> findByCustomerId(String customerId) {
-        return repo.findByCustomerId(customerId).stream().map(mapper::toDomain).toList();
+        return repo.findByCustomerIdAndStatusTrue(customerId).stream().map(mapper::toDomain).toList();
     }
 
     @Override

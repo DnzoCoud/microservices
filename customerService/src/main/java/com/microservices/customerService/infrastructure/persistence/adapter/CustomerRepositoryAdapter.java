@@ -20,7 +20,6 @@ public class CustomerRepositoryAdapter implements CustomerRepositoryPort {
         this.mapper = mapper;
     }
 
-
     @Override
     public Customer save(Customer customer) {
         return mapper.toDomain(jpa.save(mapper.toEntity(customer)));
@@ -28,7 +27,7 @@ public class CustomerRepositoryAdapter implements CustomerRepositoryPort {
 
     @Override
     public Optional<Customer> findByCustomerId(CustomerId customerId) {
-        return jpa.findByCustomerId(customerId.getValue()).map(mapper::toDomain);
+        return jpa.findByCustomerIdAndStatusTrue(customerId.getValue()).map(mapper::toDomain);
     }
 
     @Override
@@ -38,7 +37,7 @@ public class CustomerRepositoryAdapter implements CustomerRepositoryPort {
 
     @Override
     public List<Customer> findAll() {
-        return jpa.findAll().stream().map(mapper::toDomain).toList();
+        return jpa.findAllBytatusTrue().stream().map(mapper::toDomain).toList();
     }
 
     @Override

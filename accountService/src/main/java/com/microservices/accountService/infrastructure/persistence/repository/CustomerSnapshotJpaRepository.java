@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface CustomerSnapshotJpaRepository extends JpaRepository<CustomerSnapshotEntity, Long> {
-    Optional<CustomerSnapshotEntity> findByCustomerId(String customerId);
+    Optional<CustomerSnapshotEntity> findByCustomerIdAndStatusTrue(String customerId);
 
     void deleteByCustomerId(String customerId);
 
