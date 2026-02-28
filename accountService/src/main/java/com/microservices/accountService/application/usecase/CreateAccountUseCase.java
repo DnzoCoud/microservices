@@ -43,14 +43,14 @@ public class CreateAccountUseCase {
             throw new AccountAlreadyExistsException(accountNumber.getValue());
         }
 
-        validateCustomerExistsAndActive(accountNumber.getValue());
+        validateCustomerExistsAndActive(cmd.customerId());
 
         BigDecimal initial = cmd.initialBalance() != null ? cmd.initialBalance() : BigDecimal.ZERO;
 
         Account toCreate = Account.builder()
                 .id(null)
                 .accountNumber(accountNumber)
-                .accountType(AccountType.valueOf(cmd.accountType()))
+                .accountType(AccountType.from(cmd.accountType()))
                 .initialBalance(initial)
                 .balance(initial)
                 .active(cmd.active())

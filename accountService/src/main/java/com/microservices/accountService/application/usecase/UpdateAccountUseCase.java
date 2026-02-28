@@ -19,15 +19,15 @@ public class UpdateAccountUseCase {
     }
 
     @Transactional
-    public Account execute(UpdateAccountCommand cmd) {
-        Account current = repo.findByAccountNumber(AccountNumber.of(cmd.accountNumber()).getValue())
-                .orElseThrow(() -> new AccountNotFoundException(cmd.accountNumber()));
+    public Account execute(String accountNumber, UpdateAccountCommand cmd) {
+        Account current = repo.findByAccountNumber(AccountNumber.of(accountNumber).getValue())
+                .orElseThrow(() -> new AccountNotFoundException(accountNumber));
 
         Account updated = current;
 
         if (cmd.accountType() != null && !cmd.accountType().isBlank()) {
             updated = updated.toBuilder()
-                    .accountType(AccountType.valueOf(cmd.accountType()))
+                    .accountType(AccountType.from(cmd.accountType()))
                     .build();
         }
 

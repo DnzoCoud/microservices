@@ -31,11 +31,10 @@ public class CreateMovementUseCase {
         var account = port.findByAccountNumber(cmd.accountNumber());
         if (account.isEmpty()) throw new AccountNotFoundException(cmd.accountNumber());
 
-        String movementType = cmd.value().signum() > 0 ? "CREDIT" : "DEBIT";
         BigDecimal amount = cmd.value().abs();
 
         try {
-            return sp.createMovement(account.get().getId().getValue(), movementType, amount, cmd.date());
+            return sp.createMovement(account.get().getId().getValue(), account.get().getAccountType().getAccountType(), amount, cmd.date());
         } catch (DataAccessException ex) {
             String msg = ex.getMostSpecificCause() != null ? ex.getMostSpecificCause().getMessage() : ex.getMessage();
             if (msg != null && msg.contains("Insufficient balance")) {

@@ -37,6 +37,7 @@ public class CustomerEventConsumer {
             }
             case "customer.deleted" -> snapshotRepo.upsert(CustomerSnapshot.builder()
                     .customerId(data.customerId())
+                    .name(data.name())
                     .active(false)
                     .build());
             default -> {}

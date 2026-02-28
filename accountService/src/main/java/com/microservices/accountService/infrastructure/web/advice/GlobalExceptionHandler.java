@@ -69,7 +69,12 @@ public class GlobalExceptionHandler {
         var err = ApiError.builder()
                 .code("INTERNAL_ERROR")
                 .message("Unexpected error")
+                .details(List.of(ex.getClass().getSimpleName() + ": " + safeMsg(ex.getMessage())))
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(err, req.getRequestURI()));
+    }
+
+    private String safeMsg(String msg) {
+        return msg == null ? "" : msg.replaceAll("[\\r\\n\\t]", " ").trim();
     }
 }

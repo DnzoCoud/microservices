@@ -11,4 +11,5 @@ public interface AccountJpaRepository extends JpaRepository<AccountEntity, Long>
     boolean existsByAccountNumber(String accountNumber);
     List<AccountEntity> findByCustomerIdAndStatusTrue(String customerId);
     void deleteByAccountNumber(String accountNumber);
+    List<AccountEntity> findAllByStatusTrue();
 }

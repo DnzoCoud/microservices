@@ -1,20 +1,18 @@
 package com.microservices.accountService.infrastructure.web.controller;
 
 import com.microservices.accountService.application.dto.CreateAccountCommand;
+import com.microservices.accountService.application.dto.CreateMovementCommand;
 import com.microservices.accountService.application.dto.UpdateAccountCommand;
 import com.microservices.accountService.application.usecase.*;
-import com.microservices.accountService.domain.model.Account;
 import com.microservices.accountService.infrastructure.web.advice.ApiResponse;
-import com.microservices.accountService.infrastructure.web.dto.AccountResponse;
-import com.microservices.accountService.infrastructure.web.dto.CreateAccountRequest;
-import com.microservices.accountService.infrastructure.web.dto.UpdateAccountRequest;
+import com.microservices.accountService.infrastructure.web.dto.*;
 import com.microservices.accountService.infrastructure.web.mapper.AccountWebMapper;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @RestController
@@ -26,6 +24,7 @@ public class AccountController {
     private final UpdateAccountUseCase updateAccountUseCase;
     private final DeleteAccountUseCase deleteAccountUseCase;
     private final GetAccountUseCase getAccountUseCase;
+    private final CreateMovementUseCase createMovementUseCase;
 
     public AccountController(
         ListAccountUseCase listAccountUseCase,
@@ -33,7 +32,8 @@ public class AccountController {
         CreateAccountUseCase createAccountUseCase,
         UpdateAccountUseCase updateAccountUseCase,
         DeleteAccountUseCase deleteAccountUseCase,
-        GetAccountUseCase getAccountUseCase
+        GetAccountUseCase getAccountUseCase,
+        CreateMovementUseCase createMovementUseCase
     ) {
         this.listAccountUseCase = listAccountUseCase;
         this.mapper = mapper;
@@ -41,6 +41,7 @@ public class AccountController {
         this.updateAccountUseCase = updateAccountUseCase;
         this.deleteAccountUseCase = deleteAccountUseCase;
         this.getAccountUseCase = getAccountUseCase;
+        this.createMovementUseCase = createMovementUseCase;
     }
 
     @GetMapping("/{accountNumber}")
@@ -71,13 +72,31 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok(response, req.getRequestURI()));
     }
 
+    @PostMapping("/{accountNumber}/movimiento")
+    public ResponseEntity<ApiResponse<?>> createMovement(
+            @PathVariable String accountNumber,
+            @RequestBody CreateMovementRequest body,
+            HttpServletRequest req
+    ) {
+        var cmd = new CreateMovementCommand(
+                accountNumber,
+                body.getValue(),
+                body.getDate() != null ? body.getDate() : OffsetDateTime.now()
+        );
+
+        var saved = createMovementUseCase.execute(cmd);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok(saved, req.getRequestURI()));
+    }
+
     @PutMapping("/{accountNumber}")
     public ResponseEntity<ApiResponse<AccountResponse>> update(
             @PathVariable String accountNumber,
             @RequestBody UpdateAccountRequest body,
             HttpServletRequest req
     ) {
-        var saved = updateAccountUseCase.execute(new UpdateAccountCommand(accountNumber, body.getAccountType(), body.isActive()));
+        var cmd = new UpdateAccountCommand(body.getAccountType(), body.isActive());
+        var saved = updateAccountUseCase.execute(accountNumber, cmd);
         return ResponseEntity.ok(ApiResponse.ok(mapper.toResponse(saved), req.getRequestURI()));
     }
 

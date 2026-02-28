@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class AccountWebMapper {
     public AccountResponse toResponse(Account a) {
         return AccountResponse.builder()
-            .id(a.getId() != null ? a.getId().getValue() : null)
+            .id(a.getId().getValue() != null ? a.getId().getValue() : null)
             .accountNumber(a.getAccountNumber().getValue())
             .accountType(a.getAccountType().name())
             .initialBalance(a.getInitialBalance())

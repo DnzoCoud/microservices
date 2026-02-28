@@ -42,7 +42,7 @@ public class AccountRepositoryAdapter implements AccountRepositoryPort {
 
     @Override
     public List<Account> findAll() {
-        return repo.findAll().stream().map(mapper::toDomain).toList();
+        return repo.findAllByStatusTrue().stream().map(mapper::toDomain).toList();
     }
 
     @Override

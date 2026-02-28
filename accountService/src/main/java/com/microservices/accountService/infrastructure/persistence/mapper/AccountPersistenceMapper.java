@@ -7,17 +7,15 @@ import com.microservices.accountService.domain.model.AccountType;
 import com.microservices.accountService.infrastructure.persistence.entity.AccountEntity;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-
 @Component
 public class AccountPersistenceMapper {
     public Account toDomain(AccountEntity e) {
         if(e == null) return null;
 
         return Account.builder()
-                .id(AccountId.of(e.getId()))
+                .id(e.getId() != null ? AccountId.of(e.getId()) : null)
                 .accountNumber(AccountNumber.of(e.getAccountNumber()))
-                .accountType(AccountType.valueOf(e.getAccountType()))
+                .accountType(AccountType.from(e.getAccountType()))
                 .initialBalance(e.getInitialBalance())
                 .balance(e.getBalance())
                 .active(e.isStatus())
@@ -29,7 +27,7 @@ public class AccountPersistenceMapper {
         if(d == null) return null;
 
         return AccountEntity.builder()
-                .id(d.getId().getValue())
+                .id(d.getId() != null ? d.getId().getValue() : null)
                 .accountNumber(d.getAccountNumber().getValue())
                 .accountType(d.getAccountType().name())
                 .initialBalance(d.getInitialBalance())
