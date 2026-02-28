@@ -37,7 +37,7 @@ public class CustomerRepositoryAdapter implements CustomerRepositoryPort {
 
     @Override
     public List<Customer> findAll() {
-        return jpa.findAllBytatusTrue().stream().map(mapper::toDomain).toList();
+        return jpa.findAllByStatusTrue().stream().map(mapper::toDomain).toList();
     }
 
     @Override

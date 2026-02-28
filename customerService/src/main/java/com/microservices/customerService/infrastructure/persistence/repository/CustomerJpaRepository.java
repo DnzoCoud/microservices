@@ -10,5 +10,5 @@ public interface CustomerJpaRepository extends JpaRepository<CustomerEntity, Lon
     Optional<CustomerEntity> findByCustomerIdAndStatusTrue(String customerId);
     boolean existsByCustomerId(String customerId);
     void deleteByCustomerId(String customerId);
-    List<CustomerEntity> findAllBytatusTrue();
+    List<CustomerEntity> findAllByStatusTrue();
 }

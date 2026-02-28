@@ -22,8 +22,8 @@ public class DeleteCustomerUseCase {
         var current = repository.findByCustomerId(validationId)
                 .orElseThrow(() -> new CustomerNotFoundException(validationId));
 
-        current.changeStatus(false);
-        repository.save(current);
+        var toDelete = current.changeStatus(false);
+        repository.save(toDelete);
         publisher.publishDeleted(validationId);
     }
 }
