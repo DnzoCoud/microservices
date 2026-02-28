@@ -5,6 +5,7 @@ import com.microservices.customerService.application.port.PasswordHasher;
 import com.microservices.customerService.domain.exception.CustomerAlreadyExistsException;
 import com.microservices.customerService.domain.model.Customer;
 import com.microservices.customerService.domain.model.CustomerId;
+import com.microservices.customerService.domain.port.CustomerEventPublisherPort;
 import com.microservices.customerService.domain.port.CustomerRepositoryPort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,13 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class CreateCustomerUseCase {
     private final CustomerRepositoryPort repository;
     private final PasswordHasher passwordHasher;
+    private final CustomerEventPublisherPort publisher;
 
     public CreateCustomerUseCase(
             CustomerRepositoryPort repository,
-            PasswordHasher passwordHasher
+            PasswordHasher passwordHasher,
+            CustomerEventPublisherPort publisher
     ) {
         this.repository = repository;
         this.passwordHasher = passwordHasher;
+        this.publisher = publisher;
     }
 
     @Transactional
@@ -46,6 +50,7 @@ public class CreateCustomerUseCase {
                 .build();
 
         Customer saved = repository.save(toCreate);
+        publisher.publishCreated(saved);
 
         return saved;
     }

@@ -14,13 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class UpdateCustomerUseCase {
     private final CustomerRepositoryPort repository;
     private final PasswordHasher passwordHasher;
+    private final CustomerEventPublisherPort publisher;
 
     public UpdateCustomerUseCase(
             CustomerRepositoryPort repository,
-            PasswordHasher passwordHasher
+            PasswordHasher passwordHasher,
+            CustomerEventPublisherPort publisher
     ) {
         this.repository = repository;
         this.passwordHasher = passwordHasher;
+        this.publisher = publisher;
     }
 
     @Transactional
@@ -49,6 +52,7 @@ public class UpdateCustomerUseCase {
         }
 
         Customer saved = repository.save(updated);
+        publisher.publishUpdated(saved);
 
         return saved;
     }

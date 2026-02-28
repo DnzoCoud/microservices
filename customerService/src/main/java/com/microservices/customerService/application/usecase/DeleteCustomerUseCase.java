@@ -2,15 +2,18 @@ package com.microservices.customerService.application.usecase;
 
 import com.microservices.customerService.domain.exception.CustomerNotFoundException;
 import com.microservices.customerService.domain.model.CustomerId;
+import com.microservices.customerService.domain.port.CustomerEventPublisherPort;
 import com.microservices.customerService.domain.port.CustomerRepositoryPort;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DeleteCustomerUseCase {
     private final CustomerRepositoryPort repository;
+    private final CustomerEventPublisherPort publisher;
 
-    public DeleteCustomerUseCase(CustomerRepositoryPort repository) {
+    public DeleteCustomerUseCase(CustomerRepositoryPort repository, CustomerEventPublisherPort publisher) {
         this.repository = repository;
+        this.publisher = publisher;
     }
 
     public void execute(String customerId) {
@@ -19,7 +22,7 @@ public class DeleteCustomerUseCase {
         if (!repository.existsByCustomerId(validationId)) {
             throw new CustomerNotFoundException(validationId);
         }
-
         repository.deleteByCustomerId(validationId);
+        publisher.publishDeleted(validationId);
     }
 }
