@@ -116,8 +116,7 @@ EXECUTE FUNCTION account.set_updated_at();
 
 CREATE OR REPLACE FUNCTION account.create_movement(
   p_account_id BIGINT,
-  p_movement_type VARCHAR,
-  p_amount NUMERIC,
+  p_value NUMERIC,
   p_movement_date TIMESTAMPTZ DEFAULT NOW()
 )
 RETURNS TABLE (
@@ -127,51 +126,46 @@ RETURNS TABLE (
 LANGUAGE plpgsql
 AS $$
 DECLARE
-v_balance NUMERIC(18,2);
-  v_status  BOOLEAN;
-  v_new_balance NUMERIC(18,2);
+v_balance      NUMERIC(18,2);
+  v_status       BOOLEAN;
+  v_account_type VARCHAR(30);
+  v_new_balance  NUMERIC(18,2);
 BEGIN
-  IF p_amount IS NULL OR p_amount <= 0 THEN
-    RAISE EXCEPTION 'Invalid amount';
+  IF p_value IS NULL OR p_value = 0 THEN
+    RAISE EXCEPTION 'Invalid movement value';
 END IF;
 
-  IF p_movement_type NOT IN ('Ahorros', 'Credito') THEN
-    RAISE EXCEPTION 'Invalid movement type';
+SELECT a.balance, a.status, a.account_type
+INTO v_balance, v_status, v_account_type
+FROM account.accounts a
+WHERE a.id = p_account_id
+    FOR UPDATE;
+
+IF NOT FOUND THEN
+    RAISE EXCEPTION 'Account not found';
 END IF;
 
-  -- Lock the account row to prevent race conditions
-    SELECT a.balance, a.status
-    INTO v_balance, v_status
-    FROM account.accounts a
-    WHERE a.id = p_account_id
-        FOR UPDATE;
+  IF v_status IS FALSE THEN
+    RAISE EXCEPTION 'Account inactive';
+END IF;
 
-    IF NOT FOUND THEN
-        RAISE EXCEPTION 'Account not found';
-    END IF;
+  v_new_balance := v_balance + p_value;
 
-      IF v_status IS FALSE THEN
-        RAISE EXCEPTION 'Account inactive';
-    END IF;
+  IF v_new_balance < 0 THEN
+    RAISE EXCEPTION 'Insufficient balance';
+END IF;
 
-      IF p_movement_type = 'DEBIT' THEN
-        IF v_balance < p_amount THEN
-          RAISE EXCEPTION 'Insufficient balance';
-    END IF;
-        v_new_balance := v_balance - p_amount;
-    ELSE
-        v_new_balance := v_balance + p_amount;
-    END IF;
+  -- Store movement_type as account type (Ahorros/Corriente)
+  -- Store amount always positive to keep DB clean
+INSERT INTO account.movements(account_id, movement_date, movement_type, amount, balance_after)
+VALUES (p_account_id, COALESCE(p_movement_date, NOW()), v_account_type, ABS(p_value), v_new_balance)
+    RETURNING id INTO movement_id;
 
-    INSERT INTO account.movements(account_id, movement_date, movement_type, amount, balance_after)
-    VALUES (p_account_id, COALESCE(p_movement_date, NOW()), p_movement_type, p_amount, v_new_balance)
-        RETURNING id INTO movement_id;
+UPDATE account.accounts
+SET balance = v_new_balance
+WHERE id = p_account_id;
 
-    UPDATE account.accounts
-    SET balance = v_new_balance
-    WHERE id = p_account_id;
-
-    new_balance := v_new_balance;
-      RETURN NEXT;
-    END;
+new_balance := v_new_balance;
+  RETURN NEXT;
+END;
 $$;

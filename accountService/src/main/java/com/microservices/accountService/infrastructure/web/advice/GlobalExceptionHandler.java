@@ -1,5 +1,6 @@
 package com.microservices.accountService.infrastructure.web.advice;
 
+import com.microservices.accountService.domain.exception.AccountNotFoundException;
 import com.microservices.accountService.domain.exception.CustomerInactiveException;
 import com.microservices.accountService.domain.exception.CustomerSnapshotNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +20,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleNotFound(CustomerSnapshotNotFoundException ex, HttpServletRequest req) {
         var err = ApiError.builder()
                 .code("CUSTOMER_NOT_FOUND")
+                .message(ex.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(err, req.getRequestURI()));
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAccountNotFound(AccountNotFoundException ex, HttpServletRequest req) {
+        var err = ApiError.builder()
+                .code("ACCOUNT_NOT_FOUND")
                 .message(ex.getMessage())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(err, req.getRequestURI()));

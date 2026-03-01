@@ -6,7 +6,6 @@ import java.time.OffsetDateTime;
 public interface MovementSpGateway {
     SpResult createMovement(
             Long accountId,
-            String movementType,
             BigDecimal amount,
             OffsetDateTime date
     );
