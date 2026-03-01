@@ -1,0 +1,27 @@
+{
+  "info": {
+    "_postman_id": "1df594c1-0712-404b-9c04-f9459fa933c0",
+    "name": "Health Check",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "41558576"
+  },
+  "item": [
+    {
+      "name": "Actuator",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE}}/actuator",
+          "host": [
+            "{{BASE}}"
+          ],
+          "path": [
+            "actuator"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "info": {
+    "_postman_id": "37ddbeb0-85bf-4f99-9b0f-2cfbc6078b28",
+    "name": "Accounts",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "41558576"
+  },
+  "item": [
+    {
+      "name": "List Accounts",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{BASE_API_ACCOUNT}}/cuentas",
+          "host": [
+            "{{BASE_API_ACCOUNT}}"
+          ],
+          "path": [
+            "cuentas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Account",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"accountNumber\": \"328998\",\r\n    \"accountType\": \"Ahorros\",\r\n    \"initialBalance\": 200,\r\n    \"active\": true,\r\n    \"customerId\": \"CUS-001\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BASE_API_ACCOUNT}}/cuentas",
+          "host": [
+            "{{BASE_API_ACCOUNT}}"
+          ],
+          "path": [
+            "cuentas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Account By Number",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{BASE_API_ACCOUNT}}/cuentas/478758",
+          "host": [
+            "{{BASE_API_ACCOUNT}}"
+          ],
+          "path": [
+            "cuentas",
+            "478758"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Account",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"accountNumber\": \"998758\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BASE_API_ACCOUNT}}/cuentas/478758",
+          "host": [
+            "{{BASE_API_ACCOUNT}}"
+          ],
+          "path": [
+            "cuentas",
+            "478758"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "SOFT Delete account",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{BASE_API_ACCOUNT}}/cuentas/478758",
+          "host": [
+            "{{BASE_API_ACCOUNT}}"
+          ],
+          "path": [
+            "cuentas",
+            "478758"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Movement",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"value\": -5200\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BASE_API_ACCOUNT}}/cuentas/328998/movimiento",
+          "host": [
+            "{{BASE_API_ACCOUNT}}"
+          ],
+          "path": [
+            "cuentas",
+            "328998",
+            "movimiento"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

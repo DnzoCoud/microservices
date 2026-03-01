@@ -1,0 +1,117 @@
+{
+  "info": {
+    "_postman_id": "78600746-121f-4afe-b836-53ce44305e1c",
+    "name": "Customers",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "41558576"
+  },
+  "item": [
+    {
+      "name": "Store Customers",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"customerId\": \"CUS-001\",\r\n    \"password\": \"1245\",\r\n    \"active\": true,\r\n    \"name\": \"Juan Osorio\",\r\n    \"gender\": \"M\",\r\n    \"age\": 27,\r\n    \"identification\": \"14567892\",\r\n    \"address\": \"13 junio y Equinoccial\",\r\n    \"phone\": \"097244865\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BASE_API}}/clientes",
+          "host": [
+            "{{BASE_API}}"
+          ],
+          "path": [
+            "clientes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Customers",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{BASE_API}}/clientes",
+          "host": [
+            "{{BASE_API}}"
+          ],
+          "path": [
+            "clientes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Customer",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"gender\": \"M\",\r\n    \"age\": 56\r\n}"
+        },
+        "url": {
+          "raw": "{{BASE_API}}/clientes/CUS-002",
+          "host": [
+            "{{BASE_API}}"
+          ],
+          "path": [
+            "clientes",
+            "CUS-002"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "SOFT Delete Customer",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{BASE_API}}/clientes/CUS-003",
+          "host": [
+            "{{BASE_API}}"
+          ],
+          "path": [
+            "clientes",
+            "CUS-003"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

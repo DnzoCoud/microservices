@@ -1,0 +1,50 @@
+{
+  "info": {
+    "_postman_id": "037d0a83-902f-4fc3-8b3e-9b37bcb2bee6",
+    "name": "Report",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "41558576"
+  },
+  "item": [
+    {
+      "name": "Generate Report of Movements",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"value\": 5200\r\n}"
+        },
+        "url": {
+          "raw": "{{BASE_API_ACCOUNT}}/reportes?clienteId=CUS-001&fecha=2026-02-01,2026-03-01",
+          "host": [
+            "{{BASE_API_ACCOUNT}}"
+          ],
+          "path": [
+            "reportes"
+          ],
+          "query": [
+            {
+              "key": "clienteId",
+              "value": "CUS-001"
+            },
+            {
+              "key": "fecha",
+              "value": "2026-02-01,2026-03-01"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
